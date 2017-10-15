@@ -297,6 +297,7 @@
 				ACE34C151F8CB1D3007A5E82 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
