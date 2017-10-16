@@ -49,6 +49,7 @@ class ViewController: UIViewController {
                         self.CDdata = try! JSONSerialization.jsonObject(with: usableData, options: []) as! [Any];
                         self.maxIndex = self.CDdata.endIndex-1
                         self.updateTextFields()
+                        self.currentTrackUpdate()
                     }
                 }
             }
@@ -70,6 +71,19 @@ class ViewController: UIViewController {
         }
     }
     
+    func currentTrackUpdate() {
+        DispatchQueue.main.async {
+            self.previousButton.isHidden = false
+            self.nextButton.isHidden = false
+            self.numberLabel.text = "\(self.actualIndex+1) z \(self.maxIndex+1)"
+            if(self.actualIndex == self.minIndex) {
+                self.previousButton.isHidden = true
+            };
+            if(self.actualIndex == self.maxIndex) {
+                self.nextButton.isHidden = true
+            }
+        }
+    }
 
     @IBAction func deletePressed(_ sender: Any) {
     }
@@ -78,8 +92,14 @@ class ViewController: UIViewController {
     @IBAction func savePressed(_ sender: Any) {
     }
     @IBAction func previousPressed(_ sender: Any) {
+        self.actualIndex-=1
+        self.updateTextFields()
+        self.currentTrackUpdate()
     }
     @IBAction func nextPressed(_ sender: Any) {
+        self.actualIndex+=1
+        self.updateTextFields()
+        self.currentTrackUpdate()
     }
 }
 

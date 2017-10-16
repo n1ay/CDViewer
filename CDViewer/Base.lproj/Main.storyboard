@@ -176,14 +176,11 @@
                     <connections>
                         <outlet property="authorField" destination="Jlo-cb-fT1" id="q7M-Ah-AWs"/>
                         <outlet property="deleteButton" destination="8UU-Tm-YlA" id="Rto-Ae-I3x"/>
-                        <outlet property="deletePressed" destination="8UU-Tm-YlA" id="csf-Co-eBy"/>
                         <outlet property="genreField" destination="d3r-cL-vYP" id="QiN-1d-SEY"/>
                         <outlet property="newButton" destination="Dyz-W3-eVc" id="HLD-uR-0rS"/>
-                        <outlet property="newPressed" destination="Dyz-W3-eVc" id="QS1-dR-MI8"/>
                         <outlet property="nextButton" destination="aKp-5y-1C1" id="Lfo-nf-9M0"/>
                         <outlet property="numberLabel" destination="YJ1-Xu-NR4" id="oNX-6w-gXd"/>
                         <outlet property="previousButton" destination="37Z-q8-3Iw" id="2z8-Dd-23C"/>
-                        <outlet property="previousPressed" destination="37Z-q8-3Iw" id="8XV-E0-hvA"/>
                         <outlet property="saveButton" destination="zaE-cn-ecM" id="ZO2-Ud-Z58"/>
                         <outlet property="titleField" destination="loA-VY-aQP" id="L1u-GY-N3Y"/>
                         <outlet property="trackField" destination="mF0-Ws-Zzd" id="oz5-XV-z3m"/>
