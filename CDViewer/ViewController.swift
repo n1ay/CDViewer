@@ -9,6 +9,18 @@
 import UIKit
 import Foundation
 
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
 class ViewController: UIViewController {
 
     var CDdata: [Any] = []
@@ -30,6 +42,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
         self.getData()
     }
 
@@ -73,23 +86,35 @@ class ViewController: UIViewController {
     
     func currentTrackUpdate() {
         DispatchQueue.main.async {
-            self.previousButton.isHidden = false
-            self.nextButton.isHidden = false
+            self.previousButton.isEnabled = true
+            self.nextButton.isEnabled = true
             self.numberLabel.text = "\(self.actualIndex+1) z \(self.maxIndex+1)"
             if(self.actualIndex == self.minIndex) {
-                self.previousButton.isHidden = true
+                self.previousButton.isEnabled = false
             };
             if(self.actualIndex == self.maxIndex) {
-                self.nextButton.isHidden = true
+                self.nextButton.isEnabled = false
             }
+            self.saveButton.isEnabled = false
         }
     }
+    
 
+    @IBAction func onTextFieldEdit(_ sender: UITextField) {
+        saveButton.isEnabled = true
+    }
     @IBAction func deletePressed(_ sender: Any) {
+        CDdata.remove(at: actualIndex)
+        self.updateTextFields()
+        self.currentTrackUpdate()
+        self.maxIndex-=1
     }
     @IBAction func newPressed(_ sender: Any) {
     }
     @IBAction func savePressed(_ sender: Any) {
+        var cd = (CDdata[actualIndex] as! [String: Any])
+        cd["artist"] = authorField.text
+        CDdata[actualIndex]=cd
     }
     @IBAction func previousPressed(_ sender: Any) {
         self.actualIndex-=1
