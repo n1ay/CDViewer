@@ -61,8 +61,10 @@ class ViewController: UIViewController {
                     if let usableData = data {
                         self.CDdata = try! JSONSerialization.jsonObject(with: usableData, options: []) as! [Any];
                         self.maxIndex = self.CDdata.endIndex-1
-                        self.updateTextFields()
-                        self.currentTrackUpdate()
+                        DispatchQueue.main.async {
+                            self.updateTextFields()
+                            self.currentTrackUpdate()
+                        }
                     }
                 }
             }
@@ -72,49 +74,78 @@ class ViewController: UIViewController {
     
     func updateTextFields() {
         if let CD = self.CDdata[self.actualIndex] as? [String: Any] {
-            DispatchQueue.main.async {
-                self.authorField.text = CD["artist"] as? String
-                self.genreField.text = CD["genre"] as? String
-                self.titleField.text = CD["album"] as? String
-                let year = CD["year"] as? Int
-                let tracks = CD["tracks"] as? Int
-                self.yearField.text = String(year!)
-                self.trackField.text = String(tracks!)
-            }
+            self.authorField.text = CD["artist"] as? String
+            self.genreField.text = CD["genre"] as? String
+            self.titleField.text = CD["album"] as? String
+            let year = CD["year"] as? Int
+            let tracks = CD["tracks"] as? Int
+            self.yearField.text = String(year!)
+            self.trackField.text = String(tracks!)
         }
     }
     
     func currentTrackUpdate() {
-        DispatchQueue.main.async {
-            self.previousButton.isEnabled = true
-            self.nextButton.isEnabled = true
-            self.numberLabel.text = "\(self.actualIndex+1) z \(self.maxIndex+1)"
-            if(self.actualIndex == self.minIndex) {
-                self.previousButton.isEnabled = false
-            };
-            if(self.actualIndex == self.maxIndex) {
-                self.nextButton.isEnabled = false
-            }
-            self.saveButton.isEnabled = false
-        }
+        self.previousButton.isEnabled = true
+        self.numberLabel.text = "\(self.actualIndex+1) z \(self.maxIndex+1)"
+        if(self.actualIndex == self.minIndex) {
+            self.previousButton.isEnabled = false
+        };
+        self.saveButton.isEnabled = false
     }
     
+    func createNewRecord() {
+        authorField.text = ""
+        genreField.text = ""
+        titleField.text = ""
+        yearField.text = "0"
+        trackField.text = "0"
+        actualIndex = maxIndex+1
+        maxIndex+=1
+        saveButton.isEnabled = true
+        currentTrackUpdate()
+        var cd = [String: Any]()
+        cd["artist"] = ""
+        cd["genre"] = ""
+        cd["album"] = ""
+        cd["tracks"] = 0
+        cd["year"] = 0
+        CDdata.append(cd)
+    }
+    
+    func saveRecord() {
+        var cd = (CDdata[actualIndex] as! [String: Any])
+        cd["artist"] = authorField.text
+        cd["genre"] = genreField.text
+        cd["album"] = titleField.text
+        cd["year"] = Int(yearField.text!)
+        cd["tracks"] = Int(trackField.text!)
+        CDdata[actualIndex] = cd
+    }
 
     @IBAction func onTextFieldEdit(_ sender: UITextField) {
         saveButton.isEnabled = true
     }
     @IBAction func deletePressed(_ sender: Any) {
         CDdata.remove(at: actualIndex)
+        if(minIndex == maxIndex) {
+            self.maxIndex-=1
+            self.actualIndex-=1
+            createNewRecord()
+            return
+        }
+        else if(actualIndex == maxIndex) {
+            actualIndex-=1
+        }
+        self.maxIndex-=1
         self.updateTextFields()
         self.currentTrackUpdate()
-        self.maxIndex-=1
+
     }
     @IBAction func newPressed(_ sender: Any) {
+        createNewRecord()
     }
     @IBAction func savePressed(_ sender: Any) {
-        var cd = (CDdata[actualIndex] as! [String: Any])
-        cd["artist"] = authorField.text
-        CDdata[actualIndex]=cd
+        saveRecord()
     }
     @IBAction func previousPressed(_ sender: Any) {
         self.actualIndex-=1
@@ -122,6 +153,10 @@ class ViewController: UIViewController {
         self.currentTrackUpdate()
     }
     @IBAction func nextPressed(_ sender: Any) {
+        if(actualIndex == maxIndex) {
+            createNewRecord()
+            return
+        }
         self.actualIndex+=1
         self.updateTextFields()
         self.currentTrackUpdate()
