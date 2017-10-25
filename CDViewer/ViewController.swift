@@ -77,10 +77,12 @@ class ViewController: UIViewController {
             self.authorField.text = CD["artist"] as? String
             self.genreField.text = CD["genre"] as? String
             self.titleField.text = CD["album"] as? String
-            let year = CD["year"] as? Int
-            let tracks = CD["tracks"] as? Int
-            self.yearField.text = String(year!)
-            self.trackField.text = String(tracks!)
+            if let year = CD["year"] as? Int {
+                self.yearField.text = String(year)
+            }
+            if let tracks = CD["tracks"] as? Int {
+                self.trackField.text = String(tracks)
+            }
         }
     }
     
